@@ -9,170 +9,120 @@
     body {
       background:#0c0c0c;
       font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
-      overflow:hidden;
-      width:100vw; height:100vh;
-      color:#e0e0e0;
+      overflow:hidden; width:100vw; height:100vh; color:#e0e0e0;
     }
     #canvas-container { position:absolute; inset:0; }
 
-    /* ── LOADING SCREEN ── */
+    /* ── LOADING ── */
     #loading {
-      position:absolute; inset:0;
+      position:absolute; inset:0; z-index:20;
       display:flex; flex-direction:column;
-      align-items:center; justify-content:center;
-      gap:20px; background:#0c0c0c; z-index:20;
+      align-items:center; justify-content:center; gap:18px;
+      background:#0c0c0c;
+      transition:opacity .6s ease;
     }
-    #loading.hidden { display:none; }
+    #loading.fade { opacity:0; pointer-events:none; }
+    #loading-title {
+      font-size:10px; letter-spacing:.3em;
+      text-transform:uppercase; color:#333;
+    }
     #loading-label {
-      font-size:11px; letter-spacing:.25em;
+      font-size:10px; letter-spacing:.15em;
       text-transform:uppercase; color:#444;
     }
     #loading-bar-wrap {
-      width:180px; height:1px;
-      background:rgba(255,255,255,.06);
+      width:160px; height:1px; background:rgba(255,255,255,.05);
     }
     #loading-bar {
-      height:100%; width:0%;
-      background:#c8a882;
-      transition:width .1s linear;
+      height:100%; width:0%; background:#c8a882;
+      transition:width .15s linear;
     }
-
-    /* ── DROP ZONE (fallback si no hay URL) ── */
-    #dropzone {
-      position:absolute; inset:0;
-      display:flex; flex-direction:column;
-      align-items:center; justify-content:center;
-      gap:20px; background:#0c0c0c; z-index:15;
-    }
-    #dropzone.hidden { display:none; }
-    #dz-box {
-      border:1px dashed rgba(255,255,255,.12);
-      border-radius:3px; padding:48px 72px;
-      text-align:center; cursor:pointer;
-      transition:border-color .2s;
-    }
-    #dz-box:hover, #dz-box.over { border-color:#c8a882; }
-    #dz-box h2 { font-size:12px; font-weight:300;
-      letter-spacing:.2em; text-transform:uppercase; color:#777; margin-bottom:8px; }
-    #dz-box p  { font-size:10px; color:#333; letter-spacing:.1em; line-height:1.8; }
-    #dz-box input { display:none; }
-    #dz-title { font-size:10px; letter-spacing:.3em;
-      text-transform:uppercase; color:#2a2a2a; }
 
     /* ── BOTTOM UI ── */
     #ui {
       position:absolute; bottom:0; left:0; right:0;
       padding:18px 28px 22px;
-      background:linear-gradient(transparent,rgba(0,0,0,.8));
+      background:linear-gradient(transparent,rgba(0,0,0,.82));
       display:flex; flex-direction:column; gap:10px;
     }
-    #info-row {
-      display:flex; justify-content:space-between; align-items:flex-end;
-    }
+    #info-row { display:flex; justify-content:space-between; align-items:flex-end; }
     #left-info h1 {
       font-size:11px; font-weight:300;
       letter-spacing:.2em; text-transform:uppercase; color:#555;
     }
     #left-info h2 {
       font-size:10px; font-weight:300;
-      letter-spacing:.12em; color:#333; margin-top:3px;
+      letter-spacing:.1em; color:#2e2e2e; margin-top:3px;
     }
     #layer-display {
       font-size:32px; font-weight:200;
       letter-spacing:.04em; color:#fff; text-align:right; line-height:1;
     }
-    #layer-display small {
-      font-size:11px; color:#444; margin-left:3px;
-    }
-    #prog-wrap { width:100%; height:1px;
-      background:rgba(255,255,255,.06); }
-    #prog-bar  { height:100%; width:0%;
-      background:#c8a882; transition:width .08s linear; }
-    #controls {
-      display:flex; align-items:center; gap:14px;
-    }
+    #layer-display small { font-size:11px; color:#3a3a3a; margin-left:3px; }
+    #prog-wrap { width:100%; height:1px; background:rgba(255,255,255,.05); }
+    #prog-bar  { height:100%; width:0%; background:#c8a882; transition:width .08s; }
+    #controls  { display:flex; align-items:center; gap:14px; }
     button {
-      background:none;
-      border:1px solid rgba(255,255,255,.14);
-      color:#888; padding:5px 14px;
-      font-size:10px; letter-spacing:.14em;
-      text-transform:uppercase; cursor:pointer;
-      border-radius:2px; transition:all .15s;
+      background:none; border:1px solid rgba(255,255,255,.12);
+      color:#666; padding:5px 14px; font-size:10px;
+      letter-spacing:.14em; text-transform:uppercase;
+      cursor:pointer; border-radius:2px; transition:all .15s;
     }
-    button:hover { color:#fff; border-color:rgba(255,255,255,.3); }
+    button:hover { color:#fff; border-color:rgba(255,255,255,.28); }
     button.on { background:#c8a882; border-color:#c8a882; color:#000; }
-    #spd-label { font-size:10px; color:#333; letter-spacing:.1em; }
+    #spd-label { font-size:10px; color:#2e2e2e; letter-spacing:.1em; }
     input[type=range] {
       -webkit-appearance:none; width:72px; height:1px;
-      background:rgba(255,255,255,.12); outline:none;
+      background:rgba(255,255,255,.1); outline:none;
     }
     input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance:none;
-      width:9px; height:9px; border-radius:50%;
-      background:#c8a882; cursor:pointer;
+      -webkit-appearance:none; width:9px; height:9px;
+      border-radius:50%; background:#c8a882; cursor:pointer;
     }
     #hint {
       position:absolute; top:18px; left:24px;
-      font-size:9px; color:#2a2a2a;
-      letter-spacing:.1em; line-height:2;
+      font-size:9px; color:#222; letter-spacing:.1em; line-height:2;
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════
-     CONFIGURACION  ←  edita solo esta seccion
-════════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════
+     CONFIGURACION  ← editar aqui
+══════════════════════════════════ -->
 <script>
-  // Pon aqui la URL publica de tu archivo .gcode
-  // Ejemplos:
-  //   GitHub Raw:    "https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/output.gcode"
-  //   Squarespace:   "https://static1.squarespace.com/static/.../output.gcode"
-  //   Dejar vacío "" para mostrar el cargador manual
-  var GCODE_URL = "https://ious-studio.github.io/tile-printing-viewer/output.gcode";
+  // URL del archivo gcode en GitHub Pages
+  var GCODE_URL = "https://ious-studio.github.io/tile-printing-viewer/ious%20studio_grupo%20msh_sample_30x30_gh.gcode";
 
-  // Texto que aparece en la esquina inferior izquierda
+  // Etiquetas UI
   var LABEL_TITLE = "Clay 3D Print";
   var LABEL_SUB   = "IOUS Studio — WASP 40100";
 
-  // Color de la arcilla (hex)
-  var CLAY_COLOR = 0xc8a882;
-
-  // Radio del tubo en mm (mitad del diametro del nozzle = 6/2 = 3)
-  var TUBE_RADIUS = 3.0;
-
-  // Relacion de achatamiento: altura_capa / diametro_nozzle = 3/6 = 0.5
-  var TUBE_FLATTEN = 0.5;
+  // Colores
+  var COLOR_PRINT  = 0xc8a882;  // arcilla
+  var COLOR_BG     = 0x0c0c0c;  // fondo
 </script>
-<!-- ════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════ -->
 
 <div id="loading">
-  <div id="loading-label">cargando...</div>
+  <div id="loading-title">IOUS Studio</div>
   <div id="loading-bar-wrap"><div id="loading-bar"></div></div>
-</div>
-
-<div id="dropzone" class="hidden">
-  <div id="dz-title">IOUS Studio — Clay 3D Print Simulator</div>
-  <div id="dz-box">
-    <h2>Cargar GCode</h2>
-    <p>arrastra el archivo .gcode aquí<br>o haz click para seleccionar</p>
-    <input type="file" id="file-input" accept=".gcode,.txt">
-  </div>
+  <div id="loading-label">cargando...</div>
 </div>
 
 <div id="canvas-container"></div>
 
-<div id="hint">
-  drag → rotar &nbsp;·&nbsp; scroll → zoom &nbsp;·&nbsp; right drag → pan
-</div>
+<div id="hint">drag → rotar &nbsp;·&nbsp; scroll → zoom &nbsp;·&nbsp; right drag → pan</div>
 
 <div id="ui">
   <div id="info-row">
     <div id="left-info">
-      <h1 id="ui-title">—</h1>
-      <h2 id="ui-sub">—</h2>
+      <h1 id="ui-title">Clay 3D Print</h1>
+      <h2 id="ui-sub">IOUS Studio — WASP 40100</h2>
     </div>
-    <div id="layer-display">0<small id="ui-total">/ 0 layers</small></div>
+    <div id="layer-display">
+      <span id="ui-layer">0</span><small id="ui-total">/ 0 layers</small>
+    </div>
   </div>
   <div id="prog-wrap"><div id="prog-bar"></div></div>
   <div id="controls">
@@ -180,360 +130,238 @@
     <button id="btn-restart">RESTART</button>
     <span id="spd-label">SPEED</span>
     <input type="range" id="speed-slider" min="1" max="8" value="3">
-    <button id="btn-load" style="margin-left:auto">LOAD FILE</button>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script>
 // ================================================================
-//  GCODE PARSER
-//  Devuelve: { layers: [[run,run,...], ...], zKeys: [z0,z1,...] }
-//  Cada "run" = array de Vector3 (secuencia continua de extrusion)
+//  PARSER: gcode → capas de lineas
+//  Cada capa = array de segmentos { from: V3, to: V3 }
 // ================================================================
 function parseGcode(text) {
   var lines = text.split('\n');
-  var cx=0, cy=0, cz=0;
-  var prevE = 0;
-  var moves = [];
+  var cx=0, cy=0, cz=0, prevE=0;
+  var layers = [];    // layers[i] = array de puntos de impresion
+  var layerMap = {};  // zKey → array de puntos
 
   for (var i=0; i<lines.length; i++) {
     var l = lines[i].trim();
     if (!l || l[0]===';') continue;
     if (l.indexOf('G1') !== 0) continue;
 
-    var xm = l.match(/X([\-\d\.]+)/);
-    var ym = l.match(/Y([\-\d\.]+)/);
-    var zm = l.match(/Z([\-\d\.]+)/);
-    var em = l.match(/E([\-\d\.]+)/);
+    var xm=l.match(/X([\-\d\.]+)/), ym=l.match(/Y([\-\d\.]+)/);
+    var zm=l.match(/Z([\-\d\.]+)/), em=l.match(/E([\-\d\.]+)/);
 
     var nx = xm ? parseFloat(xm[1]) : cx;
     var ny = ym ? parseFloat(ym[1]) : cy;
     var nz = zm ? parseFloat(zm[1]) : cz;
     var ne = em ? parseFloat(em[1]) : prevE;
 
-    var moved = (nx!==cx || ny!==cy);
+    var moved    = (nx!==cx || ny!==cy);
     var extrudes = em && (ne > prevE) && moved;
 
-    if (moved || (zm && nz!==cz)) {
-      moves.push({ x:nx, y:ny, z:nz, e: extrudes });
+    if (moved && extrudes) {
+      var zk = Math.round(nz * 10) / 10;
+      if (!layerMap[zk]) layerMap[zk] = [];
+      // from → to en espacio Three.js (Y=arriba = Z del gcode)
+      layerMap[zk].push(
+        new THREE.Vector3(cx, cz, -cy),
+        new THREE.Vector3(nx, nz, -ny)
+      );
     }
 
     cx=nx; cy=ny; cz=nz; prevE=ne;
   }
 
-  // Agrupar en capas por Z
-  var layerMap = {};
-  var zOrder = [];
-  for (var m=0; m<moves.length; m++) {
-    var mv = moves[m];
-    var zk = Math.round(mv.z * 10) / 10;
-    if (!layerMap[zk]) { layerMap[zk]=[]; zOrder.push(zk); }
-    layerMap[zk].push(mv);
-  }
-  // Eliminar Z duplicados y ordenar
-  zOrder = zOrder.filter(function(v,i,a){ return a.indexOf(v)===i; });
-  zOrder.sort(function(a,b){ return a-b; });
+  // Ordenar capas por Z
+  var zKeys = Object.keys(layerMap)
+    .map(parseFloat)
+    .filter(function(v,i,a){ return a.indexOf(v)===i; })
+    .sort(function(a,b){ return a-b; });
 
-  // Dentro de cada capa, agrupar en runs continuos de extrusion
-  var layers = [];
-  for (var zi=0; zi<zOrder.length; zi++) {
-    var zmoves = layerMap[zOrder[zi]];
-    var runs = [];
-    var currentRun = null;
-    for (var mi=0; mi<zmoves.length; mi++) {
-      var mv = zmoves[mi];
-      // Three.js: X=x, Y=z(altura), Z=-y
-      var pt = new THREE.Vector3(mv.x, mv.z, -mv.y);
-      if (mv.e) {
-        if (!currentRun) { currentRun = []; }
-        if (currentRun.length === 0 && mi > 0) {
-          // Agregar punto anterior como inicio del run
-          var prev = zmoves[mi-1];
-          currentRun.push(new THREE.Vector3(prev.x, prev.z, -prev.y));
-        }
-        currentRun.push(pt);
-      } else {
-        if (currentRun && currentRun.length >= 2) runs.push(currentRun);
-        currentRun = null;
-      }
-    }
-    if (currentRun && currentRun.length >= 2) runs.push(currentRun);
-    if (runs.length > 0) layers.push(runs);
-  }
-
-  return { layers:layers, zKeys:zOrder, totalMoves:moves.length };
+  return { layerMap:layerMap, zKeys:zKeys };
 }
 
 // ================================================================
-//  ESCENA THREE.JS
+//  ESCENA
 // ================================================================
 var scene, camera, renderer;
-var layerMeshGroups = [];  // group de meshes por capa
+var layerObjects = [];   // THREE.LineSegments por capa
 var printHead;
+var parsed = null;
 var currentLayer = 0;
 var totalLayers  = 0;
 var playing = false;
 var speed   = 3;
 var animTimer = null;
 
+// Orbit state
+var orbitTarget = new THREE.Vector3(0,150,0);
+var orbitTheta  = 0.5, orbitPhi = 1.05, orbitRadius = 700;
+
 function initScene() {
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0c0c0c);
-  scene.fog = new THREE.FogExp2(0x0c0c0c, 0.0012);
+  scene.background = new THREE.Color(COLOR_BG);
+  scene.fog = new THREE.Fog(COLOR_BG, 800, 2000);
 
   camera = new THREE.PerspectiveCamera(
-    42, window.innerWidth/window.innerHeight, 0.5, 8000);
+    42, window.innerWidth/window.innerHeight, 0.5, 4000);
 
-  renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer = new THREE.WebGLRenderer({ antialias:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.shadowMap.enabled = false;
   document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-  // Luces
-  var amb = new THREE.AmbientLight(0xffffff, 0.4);
-  scene.add(amb);
-  var dir1 = new THREE.DirectionalLight(0xffffff, 0.9);
-  dir1.position.set(1, 2, 1);
-  scene.add(dir1);
-  var dir2 = new THREE.DirectionalLight(0xc8a882, 0.3);
-  dir2.position.set(-1, 0.5, -1);
-  scene.add(dir2);
-
   // Grid sutil
-  var grid = new THREE.GridHelper(600, 24, 0x161616, 0x111111);
+  var grid = new THREE.GridHelper(600, 20, 0x151515, 0x111111);
   scene.add(grid);
 
   // Print head
-  var hgeo = new THREE.SphereGeometry(5, 8, 8);
-  var hmat = new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0.6 });
-  printHead = new THREE.Mesh(hgeo, hmat);
+  var hg = new THREE.SphereGeometry(4,8,8);
+  var hm = new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0.5});
+  printHead = new THREE.Mesh(hg, hm);
   printHead.visible = false;
   scene.add(printHead);
 
   addOrbitControls();
-  window.addEventListener('resize', onResize);
-  renderLoop();
-}
+  window.addEventListener('resize', function(){
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
 
-function renderLoop() {
-  requestAnimationFrame(renderLoop);
-  renderer.render(scene, camera);
-}
-
-function onResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  (function loop(){ requestAnimationFrame(loop); renderer.render(scene,camera); })();
+  updateOrbit();
 }
 
 // ================================================================
-//  CONSTRUIR GEOMETRIA DE ARCILLA
-//  Cada run → TubeGeometry achatada (oval = nozzle 6mm × 3mm)
+//  CONSTRUIR LINE SEGMENTS POR CAPA
 // ================================================================
-var clayMat = null;
+function buildLayers(parsedData) {
+  // Limpiar escena
+  for (var i=0; i<layerObjects.length; i++) scene.remove(layerObjects[i]);
+  layerObjects = [];
 
-function getClayMat() {
-  if (!clayMat) {
-    clayMat = new THREE.MeshLambertMaterial({
-      color: new THREE.Color(CLAY_COLOR),
-      side: THREE.FrontSide,
-    });
-  }
-  return clayMat;
-}
+  var mat = new THREE.LineBasicMaterial({ color: new THREE.Color(COLOR_PRINT) });
+  var total = parsedData.zKeys.length;
 
-function buildRunMesh(pts) {
-  if (pts.length < 2) return null;
-
-  // Eliminar puntos duplicados
-  var clean = [pts[0]];
-  for (var i=1; i<pts.length; i++) {
-    if (pts[i].distanceTo(clean[clean.length-1]) > 0.1) clean.push(pts[i]);
-  }
-  if (clean.length < 2) return null;
-
-  var curve = new THREE.CatmullRomCurve3(clean, false, 'catmullrom', 0.3);
-  var segs  = Math.max(clean.length * 2, 8);
-
-  var geo = new THREE.TubeGeometry(
-    curve,
-    segs,         // tubular segments
-    TUBE_RADIUS,  // radio = 3mm (mitad de 6mm)
-    6,            // radial segments (hexagonal = rapido)
-    false
-  );
-
-  // Achatar en Y para simular altura de capa 3mm (flatten = 0.5)
-  var pos = geo.attributes.position;
-  // Necesitamos saber cuanto de cada punto es "radio vertical"
-  // Aproximacion: escalar la componente Y relativa al eje de la curva
-  // Mas simple: transformar el mesh con scale.y = TUBE_FLATTEN
-  var mesh = new THREE.Mesh(geo, getClayMat());
-  mesh.scale.y = TUBE_FLATTEN;
-  mesh.visible = false;
-  return mesh;
-}
-
-function buildAllLayers(parsed) {
-  // Limpiar escena anterior
-  for (var i=0; i<layerMeshGroups.length; i++) {
-    scene.remove(layerMeshGroups[i]);
-  }
-  layerMeshGroups = [];
-
-  var total = parsed.layers.length;
   for (var li=0; li<total; li++) {
-    var group = new THREE.Group();
-    var runs = parsed.layers[li];
-    for (var ri=0; ri<runs.length; ri++) {
-      var mesh = buildRunMesh(runs[ri]);
-      if (mesh) group.add(mesh);
-    }
-    group.visible = false;
-    scene.add(group);
-    layerMeshGroups.push(group);
+    var zk = parsedData.zKeys[li];
+    var pts = parsedData.layerMap[zk];
+    if (!pts || pts.length < 2) continue;
 
-    // Actualizar barra de carga
-    var pct = Math.round((li/total)*100);
-    document.getElementById('loading-bar').style.width = pct + '%';
+    var geo = new THREE.BufferGeometry().setFromPoints(pts);
+    var obj = new THREE.LineSegments(geo, mat);
+    obj.visible = false;
+    scene.add(obj);
+    layerObjects.push(obj);
+
+    // Progreso de construccion
+    document.getElementById('loading-bar').style.width =
+      Math.round((li/total)*100) + '%';
   }
 }
 
 // ================================================================
-//  CAMARA — centrar en el modelo
+//  CAMARA — centrar en modelo
 // ================================================================
-var orbitTarget = new THREE.Vector3(0, 0, 0);
-var orbitTheta  = 0.6;
-var orbitPhi    = 1.1;
-var orbitRadius = 700;
-
-function centerOnModel(parsed) {
-  var all = [];
-  for (var li=0; li<parsed.layers.length; li++) {
-    var runs = parsed.layers[li];
-    for (var ri=0; ri<runs.length; ri++) {
-      for (var pi=0; pi<runs[ri].length; pi++) all.push(runs[ri][pi]);
-    }
+function centerCamera(parsedData) {
+  var allPts = [];
+  for (var k in parsedData.layerMap) {
+    var pts = parsedData.layerMap[k];
+    for (var i=0; i<pts.length; i++) allPts.push(pts[i]);
   }
-  if (!all.length) return;
+  if (!allPts.length) return;
 
-  var box = new THREE.Box3().setFromPoints(all);
-  var center = new THREE.Vector3();
-  box.getCenter(center);
+  var box = new THREE.Box3().setFromPoints(allPts);
+  box.getCenter(orbitTarget);
   var size = new THREE.Vector3();
   box.getSize(size);
-  var maxDim = Math.max(size.x, size.y, size.z);
-
-  orbitTarget.copy(center);
-  orbitRadius = maxDim * 1.6;
-  orbitPhi    = 1.0;
-  orbitTheta  = 0.5;
-  updateOrbitCamera();
+  orbitRadius = Math.max(size.x, size.y, size.z) * 1.8;
+  updateOrbit();
 }
 
 // ================================================================
-//  ANIMACION POR CAPAS
+//  ANIMACION
 // ================================================================
-function revealNextLayer() {
-  if (currentLayer >= layerMeshGroups.length) {
-    playing = false;
-    setBtnPlay(false);
-    return;
+function revealLayer() {
+  if (currentLayer >= layerObjects.length) {
+    playing = false; setBtnPlay(false); return;
   }
 
-  var group = layerMeshGroups[currentLayer];
-  group.visible = true;
-  for (var i=0; i<group.children.length; i++) {
-    group.children[i].visible = true;
-  }
+  layerObjects[currentLayer].visible = true;
 
-  // Mover print head al último punto de la capa
-  var runs = parsedData.layers[currentLayer];
-  if (runs && runs.length > 0) {
-    var lastRun = runs[runs.length-1];
-    var lastPt  = lastRun[lastRun.length-1];
-    printHead.position.copy(lastPt);
-    printHead.position.y *= TUBE_FLATTEN; // ajustar al achatamiento
+  // Mover print head al ultimo punto de la capa
+  var zk  = parsed.zKeys[currentLayer];
+  var pts = parsed.layerMap[zk];
+  if (pts && pts.length >= 2) {
+    printHead.position.copy(pts[pts.length-1]);
     printHead.visible = true;
   }
 
   currentLayer++;
-  updateUI();
+  var pct = totalLayers > 0 ? (currentLayer/totalLayers*100) : 0;
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('ui-layer').textContent = currentLayer;
 
   if (playing) {
-    var ms = Math.max(20, 400 / (speed * speed));
-    animTimer = setTimeout(revealNextLayer, ms);
+    var ms = Math.max(16, 350 / (speed * speed));
+    animTimer = setTimeout(revealLayer, ms);
   }
-}
-
-function updateUI() {
-  var pct = totalLayers > 0 ? (currentLayer / totalLayers * 100) : 0;
-  document.getElementById('prog-bar').style.width = pct + '%';
-  document.getElementById('layer-display').childNodes[0].nodeValue = currentLayer + ' ';
 }
 
 function resetAnimation() {
   if (animTimer) clearTimeout(animTimer);
-  for (var i=0; i<layerMeshGroups.length; i++) {
-    layerMeshGroups[i].visible = false;
-    for (var j=0; j<layerMeshGroups[i].children.length; j++) {
-      layerMeshGroups[i].children[j].visible = false;
-    }
-  }
+  for (var i=0; i<layerObjects.length; i++) layerObjects[i].visible = false;
   printHead.visible = false;
   currentLayer = 0;
-  updateUI();
+  document.getElementById('prog-bar').style.width = '0%';
+  document.getElementById('ui-layer').textContent = '0';
 }
 
 function startAnimation() {
-  playing = true;
-  setBtnPlay(true);
-  revealNextLayer();
+  playing = true; setBtnPlay(true); revealLayer();
 }
 
 function setBtnPlay(on) {
-  var btn = document.getElementById('btn-play');
-  btn.textContent = on ? 'PAUSE' : 'PLAY';
-  if (on) btn.classList.add('on'); else btn.classList.remove('on');
+  var b = document.getElementById('btn-play');
+  b.textContent = on ? 'PAUSE' : 'PLAY';
+  on ? b.classList.add('on') : b.classList.remove('on');
 }
 
 // ================================================================
-//  CARGA DE DATOS
+//  CARGA
 // ================================================================
-var parsedData = null;
+function onGcodeLoaded(text) {
+  document.getElementById('loading-label').textContent = 'procesando geometría...';
+  document.getElementById('loading-bar').style.width = '0%';
 
-function loadGcode(text, filename) {
-  document.getElementById('loading').classList.remove('hidden');
-  document.getElementById('dropzone').classList.add('hidden');
-  document.getElementById('loading-label').textContent = 'procesando...';
-
-  // Diferir para que el DOM actualice
   setTimeout(function() {
-    parsedData  = parseGcode(text);
-    totalLayers = parsedData.layers.length;
+    parsed      = parseGcode(text);
+    totalLayers = parsed.zKeys.length;
+    buildLayers(parsed);
+    centerCamera(parsed);
 
-    document.getElementById('loading-label').textContent = 'construyendo geometria...';
+    document.getElementById('ui-total').textContent = '/ ' + totalLayers + ' layers';
+    document.getElementById('loading-bar').style.width = '100%';
+
+    // Fade out loading screen
     setTimeout(function() {
-      buildAllLayers(parsedData);
-      centerOnModel(parsedData);
-
-      document.getElementById('ui-title').textContent = LABEL_TITLE;
-      document.getElementById('ui-sub').textContent   = filename || LABEL_SUB;
-      document.getElementById('ui-total').textContent = '/ ' + totalLayers + ' layers';
-
-      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('loading').classList.add('fade');
+      setTimeout(function() {
+        document.getElementById('loading').style.display = 'none';
+      }, 700);
       resetAnimation();
       startAnimation();
-    }, 50);
-  }, 50);
+    }, 300);
+  }, 60);
 }
 
 // ================================================================
-//  ORBIT CONTROLS (manual, sin dependencias)
+//  ORBIT CONTROLS
 // ================================================================
-function updateOrbitCamera() {
+function updateOrbit() {
   camera.position.x = orbitTarget.x + orbitRadius * Math.sin(orbitPhi) * Math.sin(orbitTheta);
   camera.position.y = orbitTarget.y + orbitRadius * Math.cos(orbitPhi);
   camera.position.z = orbitTarget.z + orbitRadius * Math.sin(orbitPhi) * Math.cos(orbitTheta);
@@ -542,156 +370,125 @@ function updateOrbitCamera() {
 
 function addOrbitControls() {
   var dom = renderer.domElement;
-  var mouseDown = false, rightDown = false;
-  var lx = 0, ly = 0;
+  var md=false, rd=false, lx=0, ly=0;
 
-  dom.addEventListener('mousedown', function(e) {
-    if (e.button===0) mouseDown = true;
-    if (e.button===2) rightDown = true;
-    lx = e.clientX; ly = e.clientY;
+  dom.addEventListener('mousedown', function(e){
+    if(e.button===0) md=true; if(e.button===2) rd=true;
+    lx=e.clientX; ly=e.clientY;
   });
-  window.addEventListener('mouseup', function() {
-    mouseDown = false; rightDown = false;
-  });
-  window.addEventListener('mousemove', function(e) {
-    var dx = e.clientX - lx, dy = e.clientY - ly;
-    lx = e.clientX; ly = e.clientY;
-    if (mouseDown) {
-      orbitTheta -= dx * 0.005;
-      orbitPhi = Math.max(0.05, Math.min(Math.PI-0.05, orbitPhi - dy*0.005));
-      updateOrbitCamera();
+  window.addEventListener('mouseup', function(){ md=false; rd=false; });
+  window.addEventListener('mousemove', function(e){
+    var dx=e.clientX-lx, dy=e.clientY-ly; lx=e.clientX; ly=e.clientY;
+    if(md){
+      orbitTheta -= dx*0.005;
+      orbitPhi = Math.max(.05, Math.min(Math.PI-.05, orbitPhi-dy*.005));
+      updateOrbit();
     }
-    if (rightDown) {
-      var factor = orbitRadius * 0.001;
-      orbitTarget.x -= Math.cos(orbitTheta) * dx * factor;
-      orbitTarget.z += Math.sin(orbitTheta) * dx * factor;
-      orbitTarget.y += dy * factor * 0.8;
-      updateOrbitCamera();
+    if(rd){
+      var f = orbitRadius*0.001;
+      orbitTarget.x -= Math.cos(orbitTheta)*dx*f;
+      orbitTarget.z += Math.sin(orbitTheta)*dx*f;
+      orbitTarget.y += dy*f*.8;
+      updateOrbit();
     }
   });
-  dom.addEventListener('wheel', function(e) {
-    orbitRadius = Math.max(30, Math.min(3000, orbitRadius + e.deltaY * 0.4));
-    updateOrbitCamera();
-  }, { passive:true });
+  dom.addEventListener('wheel', function(e){
+    orbitRadius = Math.max(30, Math.min(3000, orbitRadius+e.deltaY*.4));
+    updateOrbit();
+  },{passive:true});
   dom.addEventListener('contextmenu', function(e){ e.preventDefault(); });
 
-  // Touch (mobile / tablet)
-  var touches = {};
-  var prevPinch = null;
-  dom.addEventListener('touchstart', function(e) {
+  // Touch
+  var touches={}, prevPinch=null;
+  dom.addEventListener('touchstart',function(e){
     e.preventDefault();
-    for (var i=0; i<e.changedTouches.length; i++) {
-      touches[e.changedTouches[i].identifier] = e.changedTouches[i];
-    }
-  }, {passive:false});
-  dom.addEventListener('touchmove', function(e) {
+    for(var i=0;i<e.changedTouches.length;i++)
+      touches[e.changedTouches[i].identifier]=e.changedTouches[i];
+  },{passive:false});
+  dom.addEventListener('touchmove',function(e){
     e.preventDefault();
-    var ids = Object.keys(touches);
-    if (ids.length === 1) {
-      var t = e.changedTouches[0];
-      var prev = touches[t.identifier];
-      var dx = t.clientX - prev.clientX;
-      var dy = t.clientY - prev.clientY;
-      orbitTheta -= dx * 0.007;
-      orbitPhi = Math.max(0.05, Math.min(Math.PI-0.05, orbitPhi - dy*0.007));
-      updateOrbitCamera();
-      touches[t.identifier] = t;
-    } else if (ids.length === 2 && e.touches.length >= 2) {
-      var t0 = e.touches[0], t1 = e.touches[1];
-      var dist = Math.hypot(t0.clientX-t1.clientX, t0.clientY-t1.clientY);
-      if (prevPinch !== null) {
-        orbitRadius = Math.max(30, Math.min(3000, orbitRadius - (dist-prevPinch)*1.5));
-        updateOrbitCamera();
+    var ids=Object.keys(touches);
+    if(ids.length===1){
+      var t=e.changedTouches[0], prev=touches[t.identifier];
+      orbitTheta-=(t.clientX-prev.clientX)*.007;
+      orbitPhi=Math.max(.05,Math.min(Math.PI-.05,orbitPhi-(t.clientY-prev.clientY)*.007));
+      updateOrbit(); touches[t.identifier]=t;
+    } else if(e.touches.length>=2){
+      var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
+                       e.touches[0].clientY-e.touches[1].clientY);
+      if(prevPinch!==null){
+        orbitRadius=Math.max(30,Math.min(3000,orbitRadius-(d-prevPinch)*1.5));
+        updateOrbit();
       }
-      prevPinch = dist;
+      prevPinch=d;
     }
-    for (var i=0; i<e.changedTouches.length; i++) {
-      touches[e.changedTouches[i].identifier] = e.changedTouches[i];
-    }
-  }, {passive:false});
-  dom.addEventListener('touchend', function(e) {
-    for (var i=0; i<e.changedTouches.length; i++) {
+    for(var i=0;i<e.changedTouches.length;i++)
+      touches[e.changedTouches[i].identifier]=e.changedTouches[i];
+  },{passive:false});
+  dom.addEventListener('touchend',function(e){
+    for(var i=0;i<e.changedTouches.length;i++)
       delete touches[e.changedTouches[i].identifier];
-    }
-    prevPinch = null;
+    prevPinch=null;
   });
 }
 
 // ================================================================
-//  BOTONES
+//  CONTROLES UI
 // ================================================================
-document.getElementById('btn-play').addEventListener('click', function() {
-  if (!parsedData) return;
-  playing = !playing;
-  setBtnPlay(playing);
-  if (playing) revealNextLayer();
-  else if (animTimer) clearTimeout(animTimer);
+document.getElementById('btn-play').addEventListener('click', function(){
+  if(!parsed) return;
+  playing=!playing; setBtnPlay(playing);
+  if(playing) revealLayer();
+  else if(animTimer) clearTimeout(animTimer);
 });
-
-document.getElementById('btn-restart').addEventListener('click', function() {
-  if (!parsedData) return;
-  if (animTimer) clearTimeout(animTimer);
-  resetAnimation();
-  startAnimation();
+document.getElementById('btn-restart').addEventListener('click', function(){
+  if(!parsed) return;
+  if(animTimer) clearTimeout(animTimer);
+  resetAnimation(); startAnimation();
 });
-
-document.getElementById('speed-slider').addEventListener('input', function(e) {
-  speed = parseInt(e.target.value);
-});
-
-document.getElementById('btn-load').addEventListener('click', function() {
-  document.getElementById('dropzone').classList.remove('hidden');
-});
-
-// File input
-var fi = document.getElementById('file-input');
-document.getElementById('dz-box').addEventListener('click', function() { fi.click(); });
-fi.addEventListener('change', function(e) {
-  var f = e.target.files[0]; if (!f) return;
-  var r = new FileReader();
-  r.onload = function(ev) { loadGcode(ev.target.result, f.name); };
-  r.readAsText(f);
-});
-
-// Drag and drop
-var dzb = document.getElementById('dz-box');
-dzb.addEventListener('dragover',  function(e){ e.preventDefault(); dzb.classList.add('over'); });
-dzb.addEventListener('dragleave', function(){ dzb.classList.remove('over'); });
-dzb.addEventListener('drop', function(e) {
-  e.preventDefault(); dzb.classList.remove('over');
-  var f = e.dataTransfer.files[0]; if (!f) return;
-  var r = new FileReader();
-  r.onload = function(ev) { loadGcode(ev.target.result, f.name); };
-  r.readAsText(f);
+document.getElementById('speed-slider').addEventListener('input', function(e){
+  speed=parseInt(e.target.value);
 });
 
 // ================================================================
 //  ARRANQUE
 // ================================================================
 initScene();
-updateOrbitCamera();
 
-if (GCODE_URL) {
-  // Carga automatica desde URL (para Squarespace y web)
-  fetch(GCODE_URL)
-    .then(function(res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.text();
-    })
-    .then(function(text) {
-      var name = GCODE_URL.split('/').pop();
-      loadGcode(text, LABEL_TITLE);
-    })
-    .catch(function(err) {
-      console.warn('No se pudo cargar GCODE_URL:', err);
-      document.getElementById('loading').classList.add('hidden');
-      document.getElementById('dropzone').classList.remove('hidden');
-    });
-} else {
-  // Sin URL: mostrar cargador manual
-  document.getElementById('loading').classList.add('hidden');
-  document.getElementById('dropzone').classList.remove('hidden');
-}
+fetch(GCODE_URL)
+  .then(function(res){
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    // Progreso de descarga aproximado
+    var total = parseInt(res.headers.get('content-length')||'0');
+    if(!res.body || !total) return res.text();
+    var reader = res.body.getReader();
+    var received = 0;
+    var chunks = [];
+    function read(){
+      return reader.read().then(function(r){
+        if(r.done){
+          var all = new Uint8Array(received);
+          var pos = 0;
+          for(var i=0;i<chunks.length;i++){
+            all.set(chunks[i],pos); pos+=chunks[i].length;
+          }
+          return new TextDecoder().decode(all);
+        }
+        chunks.push(r.value);
+        received += r.value.length;
+        document.getElementById('loading-bar').style.width =
+          Math.round((received/total)*80)+'%';
+        return read();
+      });
+    }
+    return read();
+  })
+  .then(function(text){ onGcodeLoaded(text); })
+  .catch(function(err){
+    document.getElementById('loading-label').textContent =
+      'Error cargando archivo. Verifica la URL.';
+    console.error(err);
+  });
 </script>
 </body>
 </html>
